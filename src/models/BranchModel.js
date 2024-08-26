@@ -26,9 +26,8 @@ const branchSchema = new mongoose.Schema(
           type: String,
           required: [true, "Device name is required."],
         },
-        model: {
+        type: {
           type: String,
-          required: [true, "Device model is required."],
         },
         anyDesk: {
           type: String,
