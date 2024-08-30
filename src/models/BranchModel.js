@@ -1,5 +1,31 @@
 const mongoose = require("mongoose");
 
+const lineSchema = new Schema({
+  provider: {
+    type: String,
+    enum: ["we", "etisalat", "orange", "vodafone"],
+    required: true,
+  },
+  type: {
+    type: String,
+    enum: ["4G", "landLine"],
+    required: true,
+  },
+  userResponsible: {
+    type: Schema.Types.ObjectId,
+    ref: "ItStaff",
+    required: true,
+  },
+  expirationDate: {
+    type: Date,
+    required: true,
+  },
+  lineNumber: {
+    type: String,
+    required: true,
+  },
+});
+
 const branchSchema = new mongoose.Schema(
   {
     name: {
@@ -14,45 +40,14 @@ const branchSchema = new mongoose.Schema(
       unique: [true, "Slug must be unique."],
       required: [true, "Slug is required."],
     },
-    employees: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Employee",
-      },
-    ],
-    devices: [
-      {
-        name: {
-          type: String,
-          required: [true, "Device name is required."],
-        },
-        model: {
-          type: String,
-          required: [true, "Device model is required."],
-        },
-        anyDesk: {
-          type: String,
-          trim: true,
-        },
-      },
-    ],
+
+    manger: {
+      name: String,
+      phone: String,
+    },
+
     line: {
-      number: {
-        required: [true, "Line Number is required."],
-        type: String,
-      },
-      provider: {
-        type: String,
-        required: [true, "Line provider is required."],
-      },
-      type: {
-        type: String,
-        enum: ["4G", "land line"],
-        required: [true, "Line type is required."],
-      },
-      renewAt: {
-        type: Date,
-      },
+      type: lineSchema,
     },
   },
   { timestamps: true }

@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const itStaffSchema = new mongoose.Schema(
   {
+    code: {
+      type: String,
+      required: [true, "It Staff Code is required. "],
+    },
     name: {
       type: String,
       trim: true,
@@ -24,12 +28,6 @@ const itStaffSchema = new mongoose.Schema(
     },
     imageForNationalId: String,
     birthday: Date,
-    branches: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Branch",
-      },
-    ],
     role: String,
   },
   { timestamps: true }

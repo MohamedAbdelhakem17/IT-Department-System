@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const employeeSchema = new mongoose.Schema(
   {
+    code: {
+      type: String,
+      required: [true, "Employee Code is required."],
+    },
     name: {
       type: String,
       trim: true,
@@ -14,6 +18,10 @@ const employeeSchema = new mongoose.Schema(
     branch: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Branch",
+    },
+    department: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Department",
     },
     shift: {
       type: String,
