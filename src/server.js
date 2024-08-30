@@ -6,7 +6,7 @@ const dbConnection = require("./config/databae");
 const amountRoutes = require("./routes");
 const httpStatus = require("./config/httpStatus");
 const globalError = require("./middleware//globalErrorMiddleware");
-
+const AppError = require("./utils/appError");
 dbConnection();
 
 const app = express();
