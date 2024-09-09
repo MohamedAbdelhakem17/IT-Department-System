@@ -7,7 +7,7 @@ const AppError = require("../utils/appError");
 const getAll = (Model, selectOptions = "") =>
   asyncHandler(async (req, res) => {
     const data = await Model.find({}, selectOptions);
-    res.status(httpStatus.SUCCESS).json({ status: httpStatus.SUCCESS, data });
+    res.status(200).json({ status: httpStatus.SUCCESS, data });
   });
 
 // Get a single document by ID
@@ -22,7 +22,7 @@ const getOne = (Model) =>
         `Document not found for ID ${id}`
       );
     }
-    res.status(httpStatus.SUCCESS).json({ status: httpStatus.SUCCESS, data });
+    res.status(200).json({ status: httpStatus.SUCCESS, data });
   });
 
 // Create a single document

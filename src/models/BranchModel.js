@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const lineSchema = new Schema({
+const lineSchema = new mongoose.Schema({
   provider: {
     type: String,
     enum: ["we", "etisalat", "orange", "vodafone"],
@@ -12,7 +12,7 @@ const lineSchema = new Schema({
     required: true,
   },
   userResponsible: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "ItStaff",
     required: true,
   },
@@ -23,6 +23,9 @@ const lineSchema = new Schema({
   lineNumber: {
     type: String,
     required: true,
+  },
+  capacity: {
+    type: Number
   },
 });
 

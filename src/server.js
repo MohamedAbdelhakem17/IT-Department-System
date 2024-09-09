@@ -7,6 +7,7 @@ const amountRoutes = require("./routes");
 const httpStatus = require("./config/httpStatus");
 const globalError = require("./middleware//globalErrorMiddleware");
 const AppError = require("./utils/appError");
+const De = require("./models/DevicesModel");
 dbConnection();
 
 const app = express();

@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 
 const DeviceType = require("../config/itDevicesType");
 
-// Define a single schema for all devices
 const deviceSchema = new mongoose.Schema({
   type: {
     type: String,
@@ -24,7 +23,7 @@ const deviceSchema = new mongoose.Schema({
 
   branch: {
     type: mongoose.Schema.Types.ObjectId,
-    rev: "Branch",
+    ref: "Branch",
   },
 
   model: {
@@ -50,7 +49,6 @@ const deviceSchema = new mongoose.Schema({
     enum: ["active", "inactive"],
     default: "active",
     required: function () {
-      // Status field required for specific types of devices
       return [DeviceType.FINGERPRINT, DeviceType.Firewall].includes(this.type);
     },
   },
@@ -58,12 +56,13 @@ const deviceSchema = new mongoose.Schema({
   ports: {
     type: Number,
     required: function () {
-      return [DeviceType.ROUTER, DeviceType.DVR].includes(this.type);
+      return [DeviceType.ROUTER, DeviceType.DVR, DeviceType.FIREWALL].includes(
+        this.type
+      );
     },
   },
 });
 
-// Create a model for the schema
 const ItDevice = mongoose.model("ItDevice", deviceSchema);
 
 module.exports = ItDevice;

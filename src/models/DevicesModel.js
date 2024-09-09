@@ -1,23 +1,30 @@
 const mongoose = require("mongoose");
-
 const DeviceType = require("../config/deviceType");
 
-const BaseDeviceSchema = new Schema(
+const BaseDeviceSchema = new mongoose.Schema(
   {
     model: { type: String, required: true },
     name: { type: String, required: true },
-    brand: { type: String, required: true },
-    branch: { type: Schema.Types.ObjectId, ref: "Branch", required: true },
     type: {
       type: String,
       enum: Object.values(DeviceType),
       required: true,
     },
+    workLocation: {
+      type: mongoose.Schema.Types.ObjectId,
+      refPath: "workLocationModel",
+      required: true,
+    },
+    workLocationModel: {
+      type: String,
+      required: true,
+      enum: ["Hq", "Branch"],
+    },
   },
   { discriminatorKey: "type", _id: false }
 );
 
-const WorkStationSchema = new Schema({
+const WorkStationSchema = new mongoose.Schema({
   processor: { type: String, required: true },
   ip: {
     type: String,
@@ -47,23 +54,37 @@ const WorkStationSchema = new Schema({
     capacity: { type: Number, required: true },
   },
   screenSize: { type: Number, required: true },
-  user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Employee",
+    required: true,
+  },
+  workLocation: {
+    type: mongoose.Schema.Types.ObjectId,
+    refPath: "workLocationModel",
+    required: true,
+  },
+  workLocationModel: {
+    type: String,
+    required: true,
+    enum: ["Hq", "Branch"],
+  },
 });
 
-const ScreenSchema = new Schema({
+const ScreenSchema = new mongoose.Schema({
   size: { type: Number, required: true },
   resolution: { type: String, required: true },
-  relatedTo: { type: Schema.Types.ObjectId, ref: "Device" },
+  relatedTo: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
 });
 
-const PrinterSchema = new Schema({
+const PrinterSchema = new mongoose.Schema({
   ip: { type: String },
   color: { type: Boolean, default: false },
   wireless: { type: Boolean, default: false },
 });
 
-const CashierPrinterSchema = new Schema({
-  connectWith: { type: String, enum: ["Cashier", "Order Taker"] }, // Connected with a PC for Cashier or Order Taker
+const CashierPrinterSchema = new mongoose.Schema({
+  connectWith: { type: String, enum: ["Cashier", "Order Taker"] },
   connectivity: {
     type: String,
     enum: ["USB", "Bluetooth", "Ethernet"],
@@ -71,7 +92,7 @@ const CashierPrinterSchema = new Schema({
   },
 });
 
-const ScannerSchema = new Schema({
+const ScannerSchema = new mongoose.Schema({
   model: { type: String, required: true },
   connectivity: {
     type: String,
@@ -80,10 +101,9 @@ const ScannerSchema = new Schema({
   },
 });
 
-const deviceSchema = new Mongoose.Schema({
+const deviceSchema = new mongoose.Schema({
   base: {
     type: BaseDeviceSchema,
-    required: [true, "Basic Information Must be Insert"],
   },
   workStation: {
     type: WorkStationSchema,
@@ -102,6 +122,7 @@ const deviceSchema = new Mongoose.Schema({
   },
 });
 
-const Device = mongoose.model("Device", deviceSchema);
+const DeviceModel = mongoose.model("Device", deviceSchema);
 
-module.exports = Device;
+module.exports = DeviceModel;
+
