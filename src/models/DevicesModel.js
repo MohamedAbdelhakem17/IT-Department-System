@@ -20,6 +20,14 @@ const BaseDeviceSchema = new mongoose.Schema(
       required: true,
       enum: ["Hq", "Branch"],
     },
+    deparment: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Hq",
+    },
+    branch: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Branch",
+    },
   },
   { discriminatorKey: "type", _id: false }
 );
@@ -58,16 +66,6 @@ const WorkStationSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Employee",
     required: true,
-  },
-  workLocation: {
-    type: mongoose.Schema.Types.ObjectId,
-    refPath: "workLocationModel",
-    required: true,
-  },
-  workLocationModel: {
-    type: String,
-    required: true,
-    enum: ["Hq", "Branch"],
   },
 });
 
@@ -125,4 +123,3 @@ const deviceSchema = new mongoose.Schema({
 const DeviceModel = mongoose.model("Device", deviceSchema);
 
 module.exports = DeviceModel;
-

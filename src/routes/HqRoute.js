@@ -4,7 +4,7 @@ const router = express.Router();
 
 const {
   getAllDepartments,
-  getAllDepartment,
+  getDepartment,
   createDepartment,
   updateDepartment,
   deleteDepartment,
@@ -24,7 +24,7 @@ router
 
 router
   .route("/:id")
-  .get(checkIsValidId, getAllDepartment)
+  .get(checkIsValidId, getDepartment)
   .put(updateDepartmentValidator, updateDepartment)
   .delete(checkIsValidId, deleteDepartment);
 

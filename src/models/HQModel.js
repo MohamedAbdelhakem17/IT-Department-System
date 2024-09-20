@@ -25,31 +25,32 @@ const HQSchema = new mongoose.Schema(
         message: "Invalid image format. Allowed formats: jpg, jpeg, png, gif.",
       },
     },
-    manager: {
-      name: {
-        type: String,
-        trim: true,
-        required: [true, "Manager name is required."],
-      },
-      phone: {
-        type: String,
-      },
+    managerName: {
+      type: String,
+      trim: true,
+      required: [true, "Manager name is required."],
+    },
+    managerPhone: {
+      type: String,
     },
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
-HQSchema.statics.getDeviceCount = async function () {
-  const deviceCount = await DevicesModel.find({
-    workLocation: "Hq",
-  }).countDocuments();
+// Static method to get device count for this HQ department
+HQSchema.statics.getDeviceCount = async function (departmentId) {
+  const deviceCount = await DevicesModel.countDocuments({
+    workLocation: "Hq", // You could also pass this dynamically if needed
+    department: departmentId,
+  });
   return deviceCount;
 };
 
-HQSchema.statics.getEmployeesCount = async function (value) {
-  const employeeCount = await EmployeeModel.find({
-    department: value,
-  }).countDocuments();
+// Static method to get employee count for this HQ department
+HQSchema.statics.getEmployeesCount = async function (departmentId) {
+  const employeeCount = await EmployeeModel.countDocuments({
+    department: departmentId,
+  });
   return employeeCount;
 };
 

@@ -6,7 +6,7 @@ const Factory = require("./factoryController");
 const EmployeeModel = require("../models/EmployeeModel");
 const HQModel = require("../models/HQModel");
 
-// @desc   Get  all Departments 
+// @desc   Get  all Departments
 // @route  get /api/v1/departments
 // @access Public
 const getAllDepartments = Factory.getAll(HQModel);
@@ -14,9 +14,25 @@ const getAllDepartments = Factory.getAll(HQModel);
 // @desc   Get  one Department
 // @route  get /api/v1/departments/:id
 // @access Public
-const getAllDepartment = Factory.getOne(HQModel);
+const getDepartment = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const data = await HQModel.findById(id, { __v: 0 });
+  if (!data) {
+    throw new AppError(404, httpStatus.FAIL, `Document not found for ID ${id}`);
+  }
+  const employeesCount = await HQModel.getEmployeesCount(id);
+  const devicesCount = await HQModel.getDeviceCount(id);
+  res.status(200).json({
+    status: httpStatus.SUCCESS,
+    data: {
+      department: data,
+      employeesCount: employeesCount,
+      devicesCount: devicesCount,
+    },
+  });
+});
 
-// @desc   add  new Departments 
+// @desc   add  new Departments
 // @route  post /api/v1/departments
 // @access Public
 const createDepartment = Factory.createOne(HQModel);
@@ -41,7 +57,10 @@ const getDepartmentEmployees = asyncHandler(async (req, res) => {
       department: departmentId,
     },
     { __v: 0 }
-  ).populate("device");
+  ).populate({
+    path: "device",
+    select: "_id type model",
+  });
 
   if (employeeInDepartment.length === 0)
     throw new AppError(
@@ -60,7 +79,7 @@ const getDepartmentEmployees = asyncHandler(async (req, res) => {
 
 module.exports = {
   getAllDepartments,
-  getAllDepartment,
+  getDepartment,
   createDepartment,
   updateDepartment,
   deleteDepartment,
