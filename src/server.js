@@ -1,16 +1,18 @@
 require("dotenv").config();
 const morgan = require("morgan");
 const express = require("express");
+const cors = require("cors");
 
 const dbConnection = require("./config/databae");
 const amountRoutes = require("./routes");
 const httpStatus = require("./config/httpStatus");
-const globalError = require("./middleware//globalErrorMiddleware");
+const globalError = require("./middleware/globalErrorMiddleware");
 const AppError = require("./utils/appError");
-const De = require("./models/DevicesModel");
+
 dbConnection();
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 // Set middleware in development mode
