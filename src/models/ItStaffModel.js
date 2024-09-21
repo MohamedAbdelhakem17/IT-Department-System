@@ -6,6 +6,7 @@ const itStaffSchema = new mongoose.Schema(
     code: {
       type: Number,
       required: [true, "It Staff Code is required. "],
+      unique: true,
     },
     name: {
       type: String,

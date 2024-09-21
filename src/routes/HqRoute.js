@@ -9,6 +9,8 @@ const {
   updateDepartment,
   deleteDepartment,
   getDepartmentEmployees,
+  upload,
+  imageManipulation,
 } = require("../controller/HqController");
 
 const {
@@ -20,7 +22,12 @@ const {
 router
   .route("/")
   .get(getAllDepartments)
-  .post(createDepartmentValidator, createDepartment);
+  .post(
+    upload.single("imageCover"),
+    imageManipulation,
+    createDepartmentValidator,
+    createDepartment
+  );
 
 router
   .route("/:id")

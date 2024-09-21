@@ -1,4 +1,8 @@
+
 const asyncHandler = require("express-async-handler");
+const multer = require("multer");
+const sharp = require("sharp");
+const { v4: uuidv4 } = require("uuid");
 
 const httpStatus = require("../config/httpStatus");
 const AppError = require("../utils/appError");
@@ -31,6 +35,31 @@ const getDepartment = asyncHandler(async (req, res) => {
     },
   });
 });
+
+//  upload image
+const imageStorage = multer.memoryStorage();
+const imageFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith("image")) {
+    cb(null, true);
+  } else {
+    cb(new Error("Invalid file type. Only images are allowed."), false);
+  }
+};
+
+const upload = multer({ storage: imageStorage, fileFilter: imageFilter });
+
+const imageManipulation = async (req, res, next) => {
+  if (req.file) {
+    const imageCoverFileName = `department-${uuidv4()}-${Date.now()}-cover.jpeg`;
+    await sharp(req.file.buffer)
+      .resize(400, 400)
+      .toFormat("jpeg")
+      .jpeg({ quality: 95 })
+      .toFile(`uploads/department/${imageCoverFileName}`);
+    req.body.imageCover = imageCoverFileName;
+  }
+  next()
+};
 
 // @desc   add  new Departments
 // @route  post /api/v1/departments
@@ -84,4 +113,6 @@ module.exports = {
   updateDepartment,
   deleteDepartment,
   getDepartmentEmployees,
+  upload,
+  imageManipulation,
 };

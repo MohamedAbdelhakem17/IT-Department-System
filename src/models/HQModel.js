@@ -40,9 +40,9 @@ const HQSchema = new mongoose.Schema(
 // Static method to get device count for this HQ department
 HQSchema.statics.getDeviceCount = async function (departmentId) {
   const deviceCount = await DevicesModel.countDocuments({
-    workLocation: "Hq", // You could also pass this dynamically if needed
-    department: departmentId,
+    workLocation: departmentId,
   });
+
   return deviceCount;
 };
 
@@ -53,6 +53,13 @@ HQSchema.statics.getEmployeesCount = async function (departmentId) {
   });
   return employeeCount;
 };
+
+HQSchema.post(["save", "init"], (doc) => {
+  if (doc.imageCover) {
+    const imageUrl = `${process.env.BASE_USRL}/department/${doc.imageCover}`;
+    doc.imageCover = imageUrl;
+  }
+});
 
 const HQModel = mongoose.model("Hq", HQSchema);
 

@@ -1,3 +1,4 @@
+const path = require("path");
 require("dotenv").config();
 const morgan = require("morgan");
 const express = require("express");
@@ -14,6 +15,8 @@ dbConnection();
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "../uploads")));
 
 // Set middleware in development mode
 if (process.env.ENVIRONMENT_MODE === "development") {
