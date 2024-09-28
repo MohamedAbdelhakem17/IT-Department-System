@@ -12,6 +12,7 @@ const departmentValidator = (isUpdate = false) => [
     .withMessage("Department ID is required")
     .isMongoId()
     .withMessage("This is not a valid MongoDB ID"),
+
   check("name")
     .trim()
     .notEmpty()
@@ -19,6 +20,13 @@ const departmentValidator = (isUpdate = false) => [
     .isLength({ min: 2 })
     .withMessage("Department name must be at least 2 characters long")
     .custom(async (val, { req }) => {
+      if (isUpdate) {
+        const existingDepartment = await HQModel.findById(req.params.id);
+        if (existingDepartment && existingDepartment.name === val) {
+          return true; 
+        }
+      }
+
       req.body.slug = slugify(val);
       const department = await HQModel.findOne({ name: val });
       if (department) {
@@ -26,8 +34,10 @@ const departmentValidator = (isUpdate = false) => [
       }
       return true;
     }),
+
   validatorMiddleware,
 ];
+
 
 const checkIsValidId = [
   check("id")

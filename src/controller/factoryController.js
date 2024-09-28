@@ -36,7 +36,8 @@ const createOne = (Model) =>
 const updateOne = (Model) =>
   asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const data = await Model.findByIdAndUpdate(id, req.body, { new: true });
+    console.log(id)
+    const data = await Model.findByIdAndUpdate(id, { $set: req.body }, { new: true });
     if (!data) {
       throw new AppError(
         404,

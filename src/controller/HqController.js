@@ -1,4 +1,3 @@
-
 const asyncHandler = require("express-async-handler");
 const multer = require("multer");
 const sharp = require("sharp");
@@ -58,7 +57,7 @@ const imageManipulation = async (req, res, next) => {
       .toFile(`uploads/department/${imageCoverFileName}`);
     req.body.imageCover = imageCoverFileName;
   }
-  next()
+  next();
 };
 
 // @desc   add  new Departments
