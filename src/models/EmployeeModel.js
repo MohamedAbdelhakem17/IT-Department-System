@@ -22,19 +22,39 @@ const employeeSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Branch",
     },
-    
+
     department: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Hq",
     },
-    
+
+    workInHq: {
+      type: Boolean
+    } , 
+
     shift: {
       type: String,
-      enum: ["morning", "night", "unkonw"],
-      default: "unkonw",
+      enum: ["morning", "night", "unknown"],
+      default: "unknown",
     },
   },
-  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
+  {
+    timestamps: true,
+    toJSON: {
+      virtuals: true,
+      transform: (doc, ret) => {
+        delete ret.id;
+        delete ret.user;
+      },
+    },
+    toObject: {
+      virtuals: true,
+      transform: (doc, ret) => {
+        delete ret.id;
+        delete ret.user;
+      },
+    }
+  }
 );
 
 employeeSchema.virtual("device", {

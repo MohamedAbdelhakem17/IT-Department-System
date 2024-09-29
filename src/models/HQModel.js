@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const DevicesModel = require("./DevicesModel");
+const {DeviceModel} = require("./DevicesModel");
 const EmployeeModel = require("./EmployeeModel");
 
 const HQSchema = new mongoose.Schema(
@@ -39,8 +39,8 @@ const HQSchema = new mongoose.Schema(
 
 // Static method to get device count for this HQ department
 HQSchema.statics.getDeviceCount = async function (departmentId) {
-  const deviceCount = await DevicesModel.countDocuments({
-    workLocation: departmentId,
+  const deviceCount = await DeviceModel.countDocuments({
+    department: departmentId,
   });
 
   return deviceCount;
