@@ -87,7 +87,7 @@ const getDepartmentEmployees = asyncHandler(async (req, res) => {
     { __v: 0 }
   ).populate({
     path: "device",
-    select: "_id type model",
+    select:"type _id user"
   });
 
   if (employeeInDepartment.length === 0)
@@ -96,6 +96,7 @@ const getDepartmentEmployees = asyncHandler(async (req, res) => {
       httpStatus.FAIL,
       "No Employees Found in This Department"
     );
+
   res.status(200).json({
     status: httpStatus.SUCCESS,
     data: {

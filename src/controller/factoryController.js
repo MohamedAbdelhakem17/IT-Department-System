@@ -6,7 +6,11 @@ const AppError = require("../utils/appError");
 // Get all documents from a model
 const getAll = (Model, selectOptions = "") =>
   asyncHandler(async (req, res) => {
-    const data = await Model.find({}, selectOptions);
+    let filterObject = {};
+    if (req.body.filterObj) {
+      filterObject = req.body.filterObj;
+    }
+    const data = await Model.find(filterObject, selectOptions);
     res.status(200).json({ status: httpStatus.SUCCESS, data });
   });
 
