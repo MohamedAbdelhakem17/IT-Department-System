@@ -19,7 +19,14 @@ const getAllDepartments = Factory.getAll(HQModel);
 // @access Public
 const getDepartment = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const data = await HQModel.findById(id, { __v: 0 });
+  const data = await HQModel.findById(id, { __v: 0 }).populate({
+    path: "employee",
+    select:"name code device phone" , 
+    populate: {
+      path: "device", // Populate 'device' inside 'employee'
+      select: "type _id user", // Select the fields you want from the device
+    },
+  })
   if (!data) {
     throw new AppError(404, httpStatus.FAIL, `Document not found for ID ${id}`);
   }
@@ -87,7 +94,7 @@ const getDepartmentEmployees = asyncHandler(async (req, res) => {
     { __v: 0 }
   ).populate({
     path: "device",
-    select:"type _id user"
+    select: "type _id user"
   });
 
   if (employeeInDepartment.length === 0)

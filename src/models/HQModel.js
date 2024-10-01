@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const {DeviceModel} = require("./DevicesModel");
+const { DeviceModel } = require("./DevicesModel");
 const EmployeeModel = require("./EmployeeModel");
 
 const HQSchema = new mongoose.Schema(
@@ -34,7 +34,23 @@ const HQSchema = new mongoose.Schema(
       type: String,
     },
   },
-  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
+  {
+    timestamps: true,
+    toJSON: {
+      virtuals: true,
+      transform: (doc, ret) => {
+        delete ret.id;
+        delete ret.department;
+      },
+    },
+    toObject: {
+      virtuals: true,
+      transform: (doc, ret) => {
+        delete ret.id;
+        delete ret.department;
+      },
+    }
+  }
 );
 
 // Static method to get device count for this HQ department
@@ -53,6 +69,14 @@ HQSchema.statics.getEmployeesCount = async function (departmentId) {
   });
   return employeeCount;
 };
+
+HQSchema.virtual("employee", {
+  ref: "Employee",
+  localField: "_id",
+  foreignField: "department",
+  justOne: false,
+});
+
 
 HQSchema.post(["save", "init"], (doc) => {
   if (doc.imageCover) {
